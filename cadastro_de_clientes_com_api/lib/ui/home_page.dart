@@ -1,6 +1,13 @@
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:cadastro_de_clientes_com_api/ui/cadastro_page.dart';
 import 'package:flutter/material.dart';
 
+import 'package:http/http.dart' as http;
+
+const requestUrl = "http://ihudapp.xyz/flutter/cad-clientes/cliente-api.php/";
+//const requestUrl = "http://192.168.15.5/api-php/cliente-api.php/";
 
 class Home extends StatefulWidget {
   @override
@@ -10,6 +17,20 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
 
   List _listaCliente = ["israel","hudson","aragao"];
+
+  Future getData() async {
+    http.Response response = await http.get(requestUrl);
+    return json.decode(response.body);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    getData().then((map) {
+      debugPrint("resposta: $map");
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,10 +56,17 @@ class _HomeState extends State<Home> {
 
       floatingActionButton: new FloatingActionButton(
         onPressed: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => CadastroPage())
+//          Navigator.push(context,
+//              MaterialPageRoute(builder: (context) => CadastroPage())
+//
+//          );
+          getData().then((map) {
+            setState(() {
+              _listaCliente.add(map[1]["nome"]);
+            });
+            debugPrint("resposta: $map");
+          });
 
-          );
         },//Abrir tela de cadastro
         tooltip: 'Increment',
         child: new Icon(Icons.add),
