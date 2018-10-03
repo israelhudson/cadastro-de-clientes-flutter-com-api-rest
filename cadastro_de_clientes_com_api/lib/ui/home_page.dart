@@ -28,8 +28,18 @@ class _HomeState extends State<Home> {
     super.initState();
 
     getData().then((map) {
-      debugPrint("resposta: $map");
+      debugPrint("resposta: ${map}");
     });
+  }
+
+  List _loadList(List clientes) {
+
+    debugPrint("resposta MERDAdddd: ${clientes[0]["nome"]}");
+
+    for(int i = 0; i<clientes.length;i++){
+      _listaCliente.add(clientes[i]["nome"]);
+    }
+
   }
 
   @override
@@ -62,9 +72,12 @@ class _HomeState extends State<Home> {
 //          );
           getData().then((map) {
             setState(() {
-              _listaCliente.add(map[1]["nome"]);
+              //_listaCliente.add(map[0]["nome"]);
+              _loadList(map);
+
             });
-            debugPrint("resposta: $map");
+            //debugPrint("resposta: $map");
+
           });
 
         },//Abrir tela de cadastro

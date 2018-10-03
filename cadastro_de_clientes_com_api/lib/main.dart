@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 
 
 void main(){
+//  MaterialPageRoute.debugEnableFadingRoutes =
+//  true;
   runApp(MaterialApp(
     home: Home(),
   ));
