@@ -1,0 +1,14 @@
+[  
+   {  
+      "id":"1",
+      "nome":"Israel Hudson",
+      "endereco":"Rua dos tapebas",
+      "contato":0
+   },
+   {  
+      "id":"2",
+      "nome":"Daniel Junior",
+      "endereco":"Rua Lucia",
+      "contato":0
+   }
+]
