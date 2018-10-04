@@ -1,25 +1,41 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:cadastro_de_clientes_com_api/model/Cliente.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 
-//const requestUrl = "http://ihudapp.xyz/flutter/cad-clientes/cliente-api.php/";
-const requestUrl = "http://192.168.15.5/api-php/cliente-api.php/";
+const requestUrl = "http://ihudapp.xyz/flutter/cad-clientes/cliente-api.php/";
+//const requestUrl = "http://192.168.15.5/api-php/cliente-api.php/";
 
 class CadastroPage extends StatefulWidget {
   @override
+
+//  final Cliente _clienteData;
+//
+//  CadastroPage(this._clienteData);
+
+  //_CadastroPageState createState() => _CadastroPageState(_clienteData);
   _CadastroPageState createState() => _CadastroPageState();
 
-  CadastroPage();
 }
 
 class _CadastroPageState extends State<CadastroPage> {
 
+  TextEditingController nomeController = TextEditingController();
+  TextEditingController enderecoController = TextEditingController();
+  TextEditingController contatoController = TextEditingController();
+
+//  final Cliente _clienteData;
+//
+//  _CadastroPageState(this._clienteData);
+
   @override
   void initState() {
     super.initState();
+
+    //nomeController.text = _clienteData.nome;
 
   }
 
@@ -29,18 +45,18 @@ class _CadastroPageState extends State<CadastroPage> {
   }
 
   Future postData() async {
-    Map<String, dynamic> jsonMap = {
-      'nome': 'ISRAEL',
-      'endereco': 'Rua dos lltapebas',
-      'contato': 'ddd',
-    };
 
     Map<String, dynamic> params = Map<String, dynamic>();
     //params["id"] = this.task.id.toString();
-    params["id"] = 5;
-    params["nome"] = "GOKU";
-    params["endereco"] = "GENKI DAMA dnfçaionhfçoirnçvoinrgçioangçanegç";
-    params["contato"] = "1251516";
+//    params["id"] = 5;
+//    params["nome"] = "GOKU";
+//    params["endereco"] = "GENKI DAMA dnfçaionhfçoirnçvoinrgçioangçanegç";
+//    params["contato"] = "1251516";
+
+    //params["id"] = 5;
+    params["nome"] = nomeController.text;
+    params["endereco"] = enderecoController.text;
+    params["contato"] = contatoController.text;
 
     http.Response response = await http.post(requestUrl,
         body: json.encode(params));//POST
@@ -69,18 +85,45 @@ class _CadastroPageState extends State<CadastroPage> {
       appBar: AppBar(
         title: Text("Cadastro"),
         backgroundColor: Colors.deepOrange,
-      ),
-      body: Column(
-        children: <Widget>[
-          RaisedButton(
-            child: Text("Cadastrar", style: TextStyle(color: Colors.white),),
-            color: Colors.deepPurple,
-            onPressed: () {
-              showLongToast("FOI CARALHO");
-              postData();
-            },
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.delete),
           )
         ],
+      ),
+      body: SingleChildScrollView(
+        child: Form(
+          child: Column(
+            children: <Widget>[
+              TextFormField(
+                controller: nomeController,
+                decoration: InputDecoration(
+                  labelText: "Nome"
+                ),
+              ),
+              TextFormField(
+                controller: enderecoController,
+                decoration: InputDecoration(
+                  labelText: "Endereco"
+                ),
+              ),
+              TextFormField(
+                controller: contatoController,
+                decoration: InputDecoration(
+                  labelText: "Contato"
+                ),
+              ),
+              RaisedButton(
+                child: Text("Cadastrar", style: TextStyle(color: Colors.white),),
+                color: Colors.deepPurple,
+                onPressed: () {
+                  showLongToast("FOI CARALHO");
+                  postData();
+                },
+              )
+            ],
+          ),
+        ),
       ),
     );
   }

@@ -7,8 +7,8 @@ import 'package:flutter/material.dart';
 
 import 'package:http/http.dart' as http;
 
-//const requestUrl = "http://ihudapp.xyz/flutter/cad-clientes/cliente-api.php/";
-const requestUrl = "http://192.168.15.5/api-php/cliente-api.php/";
+const requestUrl = "http://ihudapp.xyz/flutter/cad-clientes/cliente-api.php/";
+//const requestUrl = "http://192.168.15.5/api-php/cliente-api.php/";
 
 class Home extends StatefulWidget {
   @override
@@ -17,6 +17,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   List _listaCliente = [];
+  Cliente cliente;
 
   Future getData() async {
     http.Response response = await http.get(requestUrl);
@@ -90,17 +91,6 @@ class _HomeState extends State<Home> {
               });
             });
           });
-
-//          Navigator.of(context)
-//              .push(new MaterialPageRoute(builder: (context) => CadastroPage()))
-//              .then((value) {
-//            getData().then((map) {
-//              setState(() {
-//                _listaCliente.clear();
-//                _loadList(map);
-//              });
-//            });
-//          });
 
         }, //Abrir tela de cadastro
         tooltip: 'Increment',
