@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:cadastro_de_clientes_com_api/model/Cliente.dart';
 import 'package:cadastro_de_clientes_com_api/ui/cadastro_page.dart';
 import 'package:flutter/material.dart';
 
@@ -28,7 +29,10 @@ class _HomeState extends State<Home> {
     super.initState();
 
     getData().then((map) {
-      debugPrint("resposta: ${map}");
+      setState(() {
+        //_listaCliente.add(map[0]["nome"]);
+        _loadList(map);
+      });
     });
   }
 
@@ -66,19 +70,16 @@ class _HomeState extends State<Home> {
 
       floatingActionButton: new FloatingActionButton(
         onPressed: () {
-//          Navigator.push(context,
-//              MaterialPageRoute(builder: (context) => CadastroPage())
-//
-//          );
-          getData().then((map) {
-            setState(() {
-              //_listaCliente.add(map[0]["nome"]);
-              _loadList(map);
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => CadastroPage())
 
-            });
-            //debugPrint("resposta: $map");
-
-          });
+          );
+//          getData().then((map) {
+//            setState(() {
+//              //_listaCliente.add(map[0]["nome"]);
+//              _loadList(map);
+//            });
+//          });
 
         },//Abrir tela de cadastro
         tooltip: 'Increment',
