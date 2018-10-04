@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 
-const requestUrl = "http://ihudapp.xyz/flutter/cad-clientes/cliente-api.php/";
-//const requestUrl = "http://192.168.15.5/api-php/cliente-api.php/";
+//const requestUrl = "http://ihudapp.xyz/flutter/cad-clientes/cliente-api.php/";
+const requestUrl = "http://192.168.15.5/api-php/cliente-api.php/";
 
 class CadastroPage extends StatefulWidget {
   @override
@@ -30,7 +30,7 @@ class _CadastroPageState extends State<CadastroPage> {
 
   Future postData() async {
     Map<String, dynamic> jsonMap = {
-      'nome': 'Chaves',
+      'nome': 'ISRAEL',
       'endereco': 'Rua dos lltapebas',
       'contato': 'ddd',
     };
@@ -42,12 +42,13 @@ class _CadastroPageState extends State<CadastroPage> {
     params["endereco"] = "GENKI DAMA dnfçaionhfçoirnçvoinrgçioangçanegç";
     params["contato"] = "1251516";
 
-//    http.Response response = await http.post(requestUrl,
-//        body: json.encode(params));//POST
+    http.Response response = await http.post(requestUrl,
+        body: json.encode(params));//POST
 
 //    http.Response response = await http.put(requestUrl,
 //        body: json.encode(params));//PUT
-          http.Response response = await http.delete(requestUrl+"/5");//DELETE
+
+    //http.Response response = await http.delete(requestUrl+"/5");//DELETE
 
 
     print('Response status: ${response.statusCode}');
@@ -63,6 +64,7 @@ class _CadastroPageState extends State<CadastroPage> {
 
   @override
   Widget build(BuildContext context) {
+    //Navigator.pop(context,true);
     return Scaffold(
       appBar: AppBar(
         title: Text("Cadastro"),

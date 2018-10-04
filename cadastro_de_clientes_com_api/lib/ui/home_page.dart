@@ -7,8 +7,8 @@ import 'package:flutter/material.dart';
 
 import 'package:http/http.dart' as http;
 
-const requestUrl = "http://ihudapp.xyz/flutter/cad-clientes/cliente-api.php/";
-//const requestUrl = "http://192.168.15.5/api-php/cliente-api.php/";
+//const requestUrl = "http://ihudapp.xyz/flutter/cad-clientes/cliente-api.php/";
+const requestUrl = "http://192.168.15.5/api-php/cliente-api.php/";
 
 class Home extends StatefulWidget {
   @override
@@ -16,8 +16,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-
-  List _listaCliente = ["israel","hudson","aragao"];
+  List _listaCliente = [];
 
   Future getData() async {
     http.Response response = await http.get(requestUrl);
@@ -37,13 +36,11 @@ class _HomeState extends State<Home> {
   }
 
   List _loadList(List clientes) {
-
     debugPrint("resposta MERDAdddd: ${clientes[0]["nome"]}");
 
-    for(int i = 0; i<clientes.length;i++){
+    for (int i = 0; i < clientes.length; i++) {
       _listaCliente.add(clientes[i]["nome"]);
     }
-
   }
 
   @override
@@ -52,41 +49,64 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         title: Text("Cadastro de Clientes"),
         backgroundColor: Colors.deepOrange,
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.refresh),
+            onPressed: () {
+              setState(() {
+                getData().then((map) {
+                  setState(() {
+                    _listaCliente.clear();
+                    _loadList(map);
+                  });
+                });
+              });
+            },
+          )
+        ],
       ),
       body: Column(
         children: <Widget>[
           Expanded(
             child: ListView.builder(
-              padding: EdgeInsets.all(10.0),
-              itemCount: _listaCliente.length,
-              itemBuilder: (contex, index){
-                return ListTile(
-                  title: Text(_listaCliente[index]),
-                );
-              }),
+                padding: EdgeInsets.all(10.0),
+                itemCount: _listaCliente.length,
+                itemBuilder: (contex, index) {
+                  return ListTile(
+                    title: Text(_listaCliente[index]),
+                  );
+                }),
           )
         ],
       ),
-
       floatingActionButton: new FloatingActionButton(
         onPressed: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => CadastroPage())
+          Navigator.push(context, MaterialPageRoute(builder: (context) => CadastroPage()))
+          .then((value){
+            getData().then((map) {
+              setState(() {
+                _listaCliente.clear();
+                _loadList(map);
+              });
+            });
+          });
 
-          );
-//          getData().then((map) {
-//            setState(() {
-//              //_listaCliente.add(map[0]["nome"]);
-//              _loadList(map);
+//          Navigator.of(context)
+//              .push(new MaterialPageRoute(builder: (context) => CadastroPage()))
+//              .then((value) {
+//            getData().then((map) {
+//              setState(() {
+//                _listaCliente.clear();
+//                _loadList(map);
+//              });
 //            });
 //          });
 
-        },//Abrir tela de cadastro
+        }, //Abrir tela de cadastro
         tooltip: 'Increment',
         child: new Icon(Icons.add),
         backgroundColor: Colors.deepOrangeAccent,
       ),
-
     );
   }
 }
