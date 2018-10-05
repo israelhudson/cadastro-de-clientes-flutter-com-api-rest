@@ -12,12 +12,12 @@ const requestUrl = "http://ihudapp.xyz/flutter/cad-clientes/cliente-api.php/";
 class CadastroPage extends StatefulWidget {
   @override
 
-//  final Cliente _clienteData;
-//
-//  CadastroPage(this._clienteData);
+  final String _clienteData;
+  final Cliente _cliente;
 
-  //_CadastroPageState createState() => _CadastroPageState(_clienteData);
-  _CadastroPageState createState() => _CadastroPageState();
+  CadastroPage(this._clienteData, this._cliente);
+
+  _CadastroPageState createState() => _CadastroPageState(_clienteData, _cliente);
 
 }
 
@@ -31,10 +31,15 @@ class _CadastroPageState extends State<CadastroPage> {
 //
 //  _CadastroPageState(this._clienteData);
 
+  final String _clienteData;
+  final Cliente _cliente;
+//
+  _CadastroPageState(this._clienteData, this._cliente);
+
   @override
   void initState() {
     super.initState();
-
+    showLongToast(_clienteData + " - " + _cliente.nome);
     //nomeController.text = _clienteData.nome;
 
   }
@@ -117,7 +122,7 @@ class _CadastroPageState extends State<CadastroPage> {
                 child: Text("Cadastrar", style: TextStyle(color: Colors.white),),
                 color: Colors.deepPurple,
                 onPressed: () {
-                  showLongToast("FOI CARALHO");
+                  //showLongToast("FOI CARALHO");
                   postData();
                 },
               )
