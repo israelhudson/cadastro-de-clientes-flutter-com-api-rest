@@ -18,7 +18,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   List<Cliente> _listaCliente = [];
-  //Cliente cliente;
+  Cliente itemCliente;
 
   Future getData() async {
     http.Response response = await http.get(requestUrl);
@@ -31,44 +31,19 @@ class _HomeState extends State<Home> {
 
     getData().then((map) {
       setState(() {
-        //_listaCliente.add(map[0]["nome"]);
-//        Map<String, dynamic> params = Map<String, dynamic>();
-//        params["id"] = 5;
-//        params["nome"] = "GOKU";
-//        params["endereco"] = "GENKI DAMA dnfçaionhfçoirnçvoinrgçioangçanegç";
-//        params["contato"] = "1251516";
-
         _loadList(map);
       });
     });
   }
 
   List _loadList(List cli) {
-    debugPrint("resposta MERLINdddd: ${cli[0]["nome"]}");
     Cliente cliente;
-    cliente = new Cliente(cli[0]["nome"], cli[0]["endereco"], cli[0]["contato"]);
-    String nome = "fdfd";
-    showLongToast(nome);
 
     for (int i = 0; i < cli.length; i++) {
-      //_listaCliente.add(clientes[i]["nome"]);
-      //cliente = new Cliente(cli[i]["nome"], cli[i]["endereco"], cli[i]["contato"]);
-      cliente = new Cliente("Israel", "fdf", "dfdfd");
+      cliente = new Cliente(int.parse(cli[i]["id"]), cli[i]["nome"], cli[i]["endereco"], cli[i]["contato"]);
       _listaCliente.add(cliente);
-      //debugPrint("MAPA : ${clientes[i]["nome"] +" "+ clientes[i]["endereco"] +" "+ clientes[i]["contato"]}");
-      debugPrint("MAPA : ${cliente.nome}");
-
     }
 
-//    for (int i = 0; i < clientes.length; i++) {
-//      _clientes.add(cliente);
-//    }
-//
-
-    //debugPrint("MAPA : ${clientes[0]["nome"]}");
-    //showLongToast(clientes.toString());
-
-    //cliente = new Cliente(clientes[0]["nome"], clientes[0]["endereco"], clientes[0]["contato"]);
   }
 
   void showLongToast(String text) {
@@ -112,7 +87,18 @@ class _HomeState extends State<Home> {
                       title: Text(_listaCliente[index].nome),),
                     //child: Text(_listaCliente[index]),
                     onTap: () {
-                      showLongToast(_listaCliente[index].nome);
+                      //showLongToast(_listaCliente[index].id.toString()+" - "+_listaCliente[index].nome);
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => CadastroPage(_listaCliente[index])))
+                          .then((value){
+                        getData().then((map) {
+                          setState(() {
+                            _listaCliente.clear();
+                            _loadList(map);
+                            debugPrint("MAPA : ${map.toString()}");
+
+                          });
+                        });
+                      });
                     },
                   );
                 }),
@@ -121,29 +107,18 @@ class _HomeState extends State<Home> {
       ),
       floatingActionButton: new FloatingActionButton(
         onPressed: () {
+          itemCliente = new Cliente(0, "Cadastro", "", "");
+          Navigator.push(context, MaterialPageRoute(builder: (context) => CadastroPage(itemCliente)))
+              .then((value){
+            getData().then((map) {
+              setState(() {
+                _listaCliente.clear();
+                _loadList(map);
+                debugPrint("MAPA : ${map.toString()}");
 
-          getData().then((map) {
-            setState(() {
-              _listaCliente.clear();
-              _loadList(map);
+              });
             });
           });
-
-          //cliente = new Cliente("Israel", "fdf", "dfdfd");
-//          Navigator.push(context, MaterialPageRoute(builder: (context) => CadastroPage("PASSOU", cliente)))
-//          .then((value){
-//            getData().then((map) {
-//              setState(() {
-//                _listaCliente.clear();
-//                _loadList(map);
-//                debugPrint("MAPA : ${map.toString()}");
-//
-//              });
-//            });
-//          });
-
-
-
         }, //Abrir tela de cadastro
         tooltip: 'Increment',
         child: new Icon(Icons.add),

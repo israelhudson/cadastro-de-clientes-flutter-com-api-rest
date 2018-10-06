@@ -52,7 +52,7 @@ if ($metodoHttp == 'POST') {
                  "id"       => $row["id"],
                 "nome"     => $row["nome"],
                 "endereco" => $row["endereco"],
-                "contato" => (float)$row["contato"]);
+                "contato" => $row["contato"]);
             $jsonArray[] = $jsonLinha;    	    
         }
     }

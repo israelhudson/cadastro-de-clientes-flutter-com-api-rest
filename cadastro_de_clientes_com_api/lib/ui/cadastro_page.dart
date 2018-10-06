@@ -12,12 +12,11 @@ const requestUrl = "http://ihudapp.xyz/flutter/cad-clientes/cliente-api.php/";
 class CadastroPage extends StatefulWidget {
   @override
 
-  final String _clienteData;
   final Cliente _cliente;
 
-  CadastroPage(this._clienteData, this._cliente);
+  CadastroPage(this._cliente);
 
-  _CadastroPageState createState() => _CadastroPageState(_clienteData, _cliente);
+  _CadastroPageState createState() => _CadastroPageState(_cliente);
 
 }
 
@@ -26,21 +25,25 @@ class _CadastroPageState extends State<CadastroPage> {
   TextEditingController nomeController = TextEditingController();
   TextEditingController enderecoController = TextEditingController();
   TextEditingController contatoController = TextEditingController();
+  String _textButton = "";
 
-//  final Cliente _clienteData;
-//
-//  _CadastroPageState(this._clienteData);
-
-  final String _clienteData;
   final Cliente _cliente;
-//
-  _CadastroPageState(this._clienteData, this._cliente);
+
+  _CadastroPageState(this._cliente);
 
   @override
   void initState() {
     super.initState();
-    showLongToast(_clienteData + " - " + _cliente.nome);
-    //nomeController.text = _clienteData.nome;
+
+    if(_cliente.id != 0) {
+      nomeController.text = _cliente.nome;
+      enderecoController.text = _cliente.endereco;
+      contatoController.text = _cliente.contato;
+      _textButton = "Atualizar";
+    }else{
+      _textButton = "Cadastrar";
+    }
+
 
   }
 
@@ -52,13 +55,7 @@ class _CadastroPageState extends State<CadastroPage> {
   Future postData() async {
 
     Map<String, dynamic> params = Map<String, dynamic>();
-    //params["id"] = this.task.id.toString();
-//    params["id"] = 5;
-//    params["nome"] = "GOKU";
-//    params["endereco"] = "GENKI DAMA dnfçaionhfçoirnçvoinrgçioangçanegç";
-//    params["contato"] = "1251516";
 
-    //params["id"] = 5;
     params["nome"] = nomeController.text;
     params["endereco"] = enderecoController.text;
     params["contato"] = contatoController.text;
@@ -66,12 +63,34 @@ class _CadastroPageState extends State<CadastroPage> {
     http.Response response = await http.post(requestUrl,
         body: json.encode(params));//POST
 
-//    http.Response response = await http.put(requestUrl,
-//        body: json.encode(params));//PUT
+    print('Response status: ${response.statusCode}');
+    return json.decode(response.body);
+  }
 
-    //http.Response response = await http.delete(requestUrl+"/5");//DELETE
+  Future deleteData(int id) async{
+    http.Response response = await http.delete(requestUrl+"/"+id.toString());//DELETE
+    print('Response status: ${response.statusCode}');
+    return json.decode(response.body);
+  }
 
+  Future updateData(int id) async{
+    Map<String, dynamic> params = Map<String, dynamic>();
 
+    params["id"] = _cliente.id;
+    params["nome"] = nomeController.text;
+    params["endereco"] = enderecoController.text;
+    params["contato"] = contatoController.text;
+
+    http.Response response = await http.put(requestUrl,
+        body: json.encode(params)); //PUT
+
+//    if(int.parse(params["id"]) == _cliente.id){
+//      showLongToast("Atualizado com Sucesso");
+//      Navigator.pop(context);
+//    }else{
+//      showLongToast("Erro ao Atualizar");
+//    }
+    //showLongToast(response.body.toString());
     print('Response status: ${response.statusCode}');
     return json.decode(response.body);
   }
@@ -88,11 +107,26 @@ class _CadastroPageState extends State<CadastroPage> {
     //Navigator.pop(context,true);
     return Scaffold(
       appBar: AppBar(
-        title: Text("Cadastro"),
+        title: Text(_cliente.nome),
         backgroundColor: Colors.deepOrange,
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.delete),
+            onPressed: (){
+
+              if(_cliente.id != 0)
+              deleteData(_cliente.id).then((map) {
+                //showLongToast(map["id"]);
+                if(int.parse(map["id"]) == _cliente.id){
+                  showLongToast("Excluido com Sucesso");
+                  Navigator.pop(context);
+                }else{
+                  showLongToast("Erro ao excluir");
+                }
+              });
+              else
+                showLongToast("Sem função");
+            },
           )
         ],
       ),
@@ -119,11 +153,27 @@ class _CadastroPageState extends State<CadastroPage> {
                 ),
               ),
               RaisedButton(
-                child: Text("Cadastrar", style: TextStyle(color: Colors.white),),
+                child: Text(_textButton, style: TextStyle(color: Colors.white),),
                 color: Colors.deepPurple,
                 onPressed: () {
-                  //showLongToast("FOI CARALHO");
-                  postData();
+                  if(_cliente.id != 0)
+                    updateData(_cliente.id).then((map) {
+                      if(int.parse(map["id"].toString()) == _cliente.id){
+                        showLongToast("Atualizado com Sucesso");
+                        Navigator.pop(context);
+                      }else{
+                        showLongToast("Erro ao Atualizar");
+                      }
+                    });
+                  else
+                    postData().then((map) {
+                      if(int.parse(map["id"].toString()) != 0){
+                        showLongToast("Cadastrado com Sucesso");
+                        Navigator.pop(context);
+                      }else{
+                        showLongToast("Erro ao Cadastrar");
+                      }
+                    });
                 },
               )
             ],
